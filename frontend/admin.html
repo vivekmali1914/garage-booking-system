@@ -3,17 +3,33 @@
 
 <div class="navbar">
     <h2>Garage Booking System</h2>
-    <button onclick="logout()">Logout</button>
+
+    <div class="nav-right">
+
+        <div class="profile-container" onclick="toggleDropdown(event)">
+            <div class="profile-box">
+                <div class="avatar" id="avatar"></div>
+                <span id="username"></span>
+            </div>
+
+            <div class="dropdown" id="dropdown">
+                <p id="user-email"></p>
+                <hr>
+                <button onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+    </div>
 </div>
 
  <!-- HEADER -->
-    <div class="header">
+<div class="header">
     <h1>Garage Dashboard</h1>
 
     <button onclick="window.location='add-service.html'" class="add-btn">
         + Add Service
     </button>
-    </div>
+</div>
     
 <div class="menu-bar">
 
@@ -70,6 +86,15 @@ let user = JSON.parse(localStorage.getItem("user"));
 
 if(!user){
     window.location = "login.html";
+}
+
+if(user){
+    document.getElementById("username").innerText = user.name;
+    document.getElementById("user-email").innerText = user.email;
+
+    // Avatar initial
+    document.getElementById("avatar").innerText =
+        user.name.charAt(0).toUpperCase();
 }
 
 if(user.role !== "garage_owner"){
@@ -199,6 +224,19 @@ function scrollToSection(id){
     document.getElementById(id).scrollIntoView({
         behavior: "smooth"
     });
+}
+
+
+function toggleDropdown(){
+     event.stopPropagation();
+    document.getElementById("dropdown").classList.toggle("show");
+}
+
+// close when clicking outside
+window.onclick = function(e){
+    if(!e.target.closest(".profile-container")){
+        document.getElementById("dropdown")?.classList.remove("show");
+    }
 }
 
 </script>

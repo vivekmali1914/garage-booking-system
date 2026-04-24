@@ -1,18 +1,29 @@
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style1.css">
 
 <div class="navbar">
     <h2>Garage Booking System</h2>
 
-    <div class="nav-buttons">
-        
+    <div class="nav-right">
 
         <button onclick="window.location='emergency-status.html'">
-        Emergency Status
+            Emergency Status
         </button>
 
-        <button onclick="logout()">
-            Logout
-        </button>
+        <!-- 👤 PROFILE -->
+        <div class="profile-container" onclick="toggleDropdown(event)">
+            <div class="profile-box">
+                <div class="avatar" id="avatar"></div>
+                <span id="username"></span>
+            </div>
+
+            <div class="dropdown" id="dropdown">
+                <p id="user-email"></p>
+                <hr>
+                <button onclick="goTo('my-bookings.html')">My Bookings</button>
+                <button onclick="logout()">Logout</button>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -21,10 +32,6 @@
    <select id="vehicle"></select>
     <div class="menu-item" onclick="goTo('booking.html')">
         🚗 Book Appointment
-    </div>
-
-    <div class="menu-item" onclick="goTo('my-bookings.html')">
-        📋 My Bookings
     </div>
 
     <div class="menu-item" onclick="requestEmergency()">
@@ -44,13 +51,33 @@
 
 <div class="container" id="garages"></div>
 
+
 <script>
+
 
 let user = JSON.parse(localStorage.getItem("user"));
 
+
+
 if(!user){
-    window.location = "login.html";
+    document.querySelector(".nav-buttons").innerHTML = `
+        <button onclick="window.location='login.html'">Login</button>
+    `;
 }
+
+if(user){
+    document.getElementById("username").innerText = user.name || "User";
+    document.getElementById("user-email").innerText = user.email || "No email";
+
+    document.getElementById("avatar").innerText =
+        user.name ? user.name.charAt(0).toUpperCase() : "U";
+}
+
+function toggleDropdown(e){
+    e.stopPropagation(); // 🔥 FIX
+    document.getElementById("dropdown").classList.toggle("show");
+}
+
 
 fetch("http://localhost:3000/garages")
 .then(res => res.json())
@@ -71,6 +98,9 @@ fetch("http://localhost:3000/garages")
 });
 
 function viewServices(id){
+     let user = JSON.parse(localStorage.getItem("user"));
+
+    
     window.location = "services.html?garage=" + id;
 }
 
@@ -81,8 +111,9 @@ function requestEmergency(){
     console.log("clicked");
     console.log("user:", user);
 
-    if(!user){
-        alert("User not logged in ❌");
+     if(!user){
+        alert("Please login first ❌");
+        window.location = "login.html";
         return;
     }
 
@@ -151,6 +182,14 @@ function logout(){
 };
 
 function goTo(page){
+    let user = JSON.parse(localStorage.getItem("user"));
+
+    if(!user){
+        alert("Please login first ❌");
+        window.location = "login.html";
+        return;
+    }
+
     window.location.href = page;
 }
 

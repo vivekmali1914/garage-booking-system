@@ -22,8 +22,30 @@ if(!user){
 }
 
 function addVehicle(){
-    let model = document.getElementById("model").value;
-    let number_plate = document.getElementById("plate").value;
+
+    let model = document.getElementById("model").value.trim();
+    let number_plate = document.getElementById("plate").value.trim().toUpperCase();
+
+     if(!model || !number_plate){
+        alert("All fields are required ❌");
+        return;
+    }
+
+     fetch(`http://localhost:3000/vehicles/${user.id}`)
+    .then(res => res.json())
+    .then(vehicles => {
+
+        let alreadyExists = vehicles.some(v => 
+            v.number_plate.toUpperCase() === number_plate
+        );
+
+        if(alreadyExists){
+            alert("Vehicle already available ❌");
+            return;
+        }
+
+
+    
 
     fetch("http://localhost:3000/add-vehicle", {
         method: "POST",
