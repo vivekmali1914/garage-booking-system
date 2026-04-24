@@ -1,0 +1,206 @@
+<link rel="stylesheet" href="style.css">
+
+<div class="navbar">
+    <h2>Garage Booking System</h2>
+
+    <div class="nav-buttons">
+        
+
+        <button onclick="window.location='emergency-status.html'">
+        Emergency Status
+        </button>
+
+        <button onclick="logout()">
+            Logout
+        </button>
+    </div>
+</div>
+
+
+<div class="menu">
+   <select id="vehicle"></select>
+    <div class="menu-item" onclick="goTo('booking.html')">
+        🚗 Book Appointment
+    </div>
+
+    <div class="menu-item" onclick="goTo('my-bookings.html')">
+        📋 My Bookings
+    </div>
+
+    <div class="menu-item" onclick="requestEmergency()">
+        🚨 Emergency Help
+    </div>
+
+    <div class="menu-item" onclick="goTo('add-vehicle.html')">
+        ➕ Add Vehicle
+    </div>
+
+</div>
+
+<div id="emergencyStatus" style="margin:20px; text-align:center;"></div>
+
+
+<h1>Available Garages</h1>
+
+<div class="container" id="garages"></div>
+
+<script>
+
+let user = JSON.parse(localStorage.getItem("user"));
+
+if(!user){
+    window.location = "login.html";
+}
+
+fetch("http://localhost:3000/garages")
+.then(res => res.json())
+.then(data => {
+    let html = "";
+
+    data.forEach(g => {
+       html += `
+<div class="card">
+    <h3>${g.name}</h3>
+    <p>📍 ${g.location}</p>
+    <p>🚗 Capacity: ${g.capacity}</p>
+    <button onclick="viewServices(${g.id})">View Services</button>
+</div>`;
+    });
+
+    document.getElementById("garages").innerHTML = html;
+});
+
+function viewServices(id){
+    window.location = "services.html?garage=" + id;
+}
+
+function requestEmergency(){
+
+    let user = JSON.parse(localStorage.getItem("user"));
+
+    console.log("clicked");
+    console.log("user:", user);
+
+    if(!user){
+        alert("User not logged in ❌");
+        return;
+    }
+
+    let problem = prompt("Describe your problem");
+
+    if(!problem){
+        alert("Enter problem ❌");
+        return;
+    }
+
+    // 🔥 GET REAL LOCATION
+    navigator.geolocation.getCurrentPosition(
+
+        (pos) => {
+            let lat = pos.coords.latitude;
+            let lng = pos.coords.longitude;
+
+            console.log("Real Location:", lat, lng);
+
+            sendEmergency(user.id, problem, lat, lng);
+        },
+
+        (err) => {
+            console.log(err);
+
+            alert("Location denied ❌ Using default");
+
+            // fallback
+            let lat = 18.5204;
+            let lng = 73.8567;
+
+            sendEmergency(user.id, problem, lat, lng);
+        }
+    );
+}
+
+
+function sendEmergency(userId, problem, lat, lng){
+
+    let vehicle_id = document.getElementById("vehicle").value;
+
+    if(!vehicle_id){
+        alert("Please select vehicle ❌");
+        return;
+    }
+
+    fetch("http://localhost:3000/emergency", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            user_id: userId,
+            vehicle_id: vehicle_id,   // ✅ FIXED
+            problem,
+            latitude: lat,
+            longitude: lng
+        })
+    })
+    .then(res => res.text())
+    .then(msg => alert(msg));
+}
+
+
+function logout(){
+    localStorage.removeItem("user");
+    window.location.href = "login.html";
+};
+
+function goTo(page){
+    window.location.href = page;
+}
+
+
+fetch(`http://localhost:3000/vehicles/${user.id}`)
+.then(res => res.json())
+.then(data => {
+
+    let html = "";
+
+    if(data.length === 0){
+        html = `<option disabled selected>No vehicle found</option>`;
+    } else {
+        data.forEach(v => {
+            html += `
+                <option value="${v.id}">
+                    ${v.model} (${v.number_plate})
+                </option>
+            `;
+        });
+    }
+
+    document.getElementById("vehicle").innerHTML = html;
+});
+
+function loadEmergencyStatus(){
+
+    let user = JSON.parse(localStorage.getItem("user"));
+
+    if(!user) return;
+
+    fetch(`http://localhost:3000/my-emergency/${user.id}`)
+    .then(res => res.json())
+    .then(data => {
+
+        if(!data){
+            document.getElementById("emergencyStatus").innerHTML = "";
+            return;
+        }
+
+        let html = `
+            <div class="card">
+                <h3>🚨 Emergency Status</h3>
+                <p>Status: <b>${data.status}</b></p>
+                <p>Garage: ${data.accepted_by || "Waiting..."}</p>
+                <p>ETA: ${data.eta ? data.eta + " mins" : "Calculating..."}</p>
+            </div>
+        `;
+
+        document.getElementById("emergencyStatus").innerHTML = html;
+    });
+}
+</script>

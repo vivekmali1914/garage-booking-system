@@ -1,0 +1,62 @@
+<link rel="stylesheet" href="style.css">
+
+<div class="navbar">
+    <h2>Garage Booking System</h2>
+</div>
+
+<h1>Register</h1>
+
+<div style="text-align:center;">
+<input type="text" id="name" placeholder="Name" required><br><br>
+<input type="email" id="email" placeholder="Email" required><br><br>
+<input type="password" id="password" placeholder="Password" required><br><br>
+    <select id="role">
+        <option value="customer">Customer</option>
+        <option value="garage_owner">Garage Owner</option>
+    </select><br><br>
+
+    <button onclick="register()">Register</button>
+</div>
+
+<script>
+function register(){
+
+    let name = document.getElementById("name").value.trim();
+    let email = document.getElementById("email").value.trim();
+    let password = document.getElementById("password").value.trim();
+    let role = document.getElementById("role").value;
+
+    // 🔥 VALIDATION
+    if(!name || !email || !password){
+        alert("All fields are required ❌");
+        return;
+    }
+
+    // 🔥 EMAIL FORMAT CHECK
+    let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if(!emailPattern.test(email)){
+        alert("Enter valid email ❌");
+        return;
+    }
+
+    // 🔥 PASSWORD LENGTH
+    if(password.length < 6){
+        alert("Password must be at least 6 characters ❌");
+        return;
+    }
+
+    fetch("http://localhost:3000/register", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ name, email, password, role })
+    })
+    .then(res => res.text())
+    .then(data => {
+        alert(data);
+        window.location.href = "login.html";
+    });
+}
+</script>

@@ -1,0 +1,53 @@
+<link rel="stylesheet" href="style.css">
+
+<div class="navbar">
+    <h2>My Bookings</h2>
+    <button onclick="logout()">Logout</button>
+</div>
+
+<h1>Your Appointments</h1>
+
+<div class="container" id="bookings"></div>
+
+<script>
+let user = JSON.parse(localStorage.getItem("user"));
+
+if(!user){
+    window.location = "login.html";
+}
+
+// fetch bookings
+fetch(`http://localhost:3000/my-bookings/${user.id}`)
+.then(res => res.json())
+.then(data => {
+
+    let html = "";
+
+    if(data.length === 0){
+        html = "<p>No bookings yet ❌</p>";
+    } else {
+
+        data.forEach(b => {
+            html += `
+            <div class="card">
+                <h3>${b.service_name}</h3>
+                <p>🏢 ${b.garage_name}</p>
+                <p>📅 ${b.date}</p>
+                <p>⏰ ${b.time}</p>
+                <p>Status: <b>${b.status}</b></p>
+                <p>Type: ${b.service_type}</p>
+
+                ${b.service_type === "home" ? `<p>📍 ${b.address}</p>` : ""}
+            </div>
+            `;
+        });
+    }
+
+    document.getElementById("bookings").innerHTML = html;
+});
+
+function logout(){
+    localStorage.removeItem("user");
+    window.location = "login.html";
+}
+</script>

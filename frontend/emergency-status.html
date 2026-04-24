@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="style.css">
+
+<h1>Emergency Status 🚨</h1>
+
+<div id="status"></div>
+
+<script>
+let user = JSON.parse(localStorage.getItem("user"));
+
+fetch(`http://localhost:3000/my-emergency/${user.id}`)
+.then(res => res.json())
+.then(data => {
+
+    if(!data){
+        document.getElementById("status").innerHTML = "No active request ❌";
+        return;
+    }
+
+    document.getElementById("status").innerHTML = `
+        <div class="card">
+            <h3>Garage Assigned ✔</h3>
+            <p>🚗 Garage ID: ${data.accepted_by}</p>
+            <p>⏱ ETA: ${data.eta} mins</p>
+            <p>Status: ${data.status}</p>
+        </div>
+    `;
+});
+</script>

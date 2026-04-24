@@ -1,0 +1,139 @@
+<link rel="stylesheet" href="style.css">
+
+<div class="navbar">
+    <h2>Garage Booking System</h2>
+
+    <div>
+        <button onclick="window.location='add-vehicle.html'">Add Vehicle</button>
+        <button onclick="logout()">Logout</button>
+    </div>
+</div>
+
+<h1>Book Appointment</h1>
+
+<div style="text-align:center;">
+    <!-- Vehicle dropdown -->
+    <select id="vehicle"></select><br><br>
+
+    <input type="date" id="date"><br><br>
+    <input type="time" id="time"><br><br>
+    <label>Select Service Type:</label><br>
+
+    <select id="service_type">
+    <option value="garage">Garage Service 🚗</option>
+    <option value="home">Home Service 🏠 (+₹200)</option>
+    </select><br><br>
+
+    <div id="addressBox" style="display:none;">
+    <input type="text" id="address" placeholder="Enter your address"><br><br>
+    </div>
+
+    <button onclick="bookNow()">Confirm Booking</button>
+    </div>
+
+<script>
+// ✅ Get logged-in user
+let user = JSON.parse(localStorage.getItem("user"));
+
+if(!user){
+    window.location = "login.html";
+}
+
+// ✅ Get params
+let params = new URLSearchParams(window.location.search);
+let service_id = params.get("service");
+let garage_id = params.get("garage");
+
+
+// ✅ Load vehicles of logged-in user
+fetch(`http://localhost:3000/vehicles/${user.id}`)
+.then(res => res.json())
+.then(data => {
+    let html = "";
+
+    if(data.length === 0){
+        html = `<option disabled selected>No vehicle found</option>`;
+
+        // ✅ Add button BELOW dropdown
+        document.getElementById("vehicle").insertAdjacentHTML("afterend", `
+            <br><br>
+            <button onclick="window.location='add-vehicle.html'">
+                + Add Vehicle
+            </button>
+        `);
+    } else {
+        data.forEach(v => {
+            html += `
+                <option value="${v.id}">
+                    ${v.model} (${v.number_plate})
+                </option>
+            `;
+        });
+    }
+
+    document.getElementById("vehicle").innerHTML = html;
+});
+
+
+
+
+// ✅ Booking function
+function bookNow(){
+    let date = document.getElementById("date").value;
+    let time = document.getElementById("time").value;
+    let vehicle_id = document.getElementById("vehicle").value;
+    let service_type = document.getElementById("service_type").value;
+    let address = document.getElementById("address").value;
+
+    // Validation
+    if(!date || !time){
+        alert("Please select date & time ❌");
+        return;
+    }
+
+    if(service_type === "home" && !address){
+    alert("Please enter address for home service ❌");
+    return;
+   }
+
+    fetch("http://localhost:3000/book", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            user_id: user.id,        // ✅ dynamic
+            garage_id: garage_id,
+            vehicle_id: vehicle_id,  // ✅ dynamic
+            service_id: service_id,
+            date: date,
+            time: time,
+            service_type: service_type,
+            address: address
+        })
+    })
+    .then(res => res.text())
+    .then(data => {
+        alert(data);
+
+        // optional redirect
+        window.location.href = "index.html";
+    });
+}
+
+function logout(){
+    localStorage.removeItem("user");
+    window.location.href = "login.html";
+};
+
+document.getElementById("service_type").addEventListener("change", function() {
+    let type = this.value;
+
+    if(type === "home"){
+        document.getElementById("addressBox").style.display = "block";
+    } else {
+        document.getElementById("addressBox").style.display = "none";
+    }
+});
+
+</script>

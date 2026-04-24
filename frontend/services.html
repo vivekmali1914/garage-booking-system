@@ -1,0 +1,40 @@
+<link rel="stylesheet" href="style.css">
+
+<div class="navbar">
+    <h2>Garage Booking System</h2>
+    <button onclick="logout()">Logout</button>
+</div>
+
+<h1>Services</h1>
+<div class="container" id="services"></div>
+
+<script>
+let garageId = new URLSearchParams(window.location.search).get("garage");
+
+fetch(`http://localhost:3000/services/${garageId}`)
+.then(res => res.json())
+.then(data => {
+    let html = "";
+
+    data.forEach(s => {
+        html += `
+<div class="card">
+    <h3>${s.name}</h3>
+    <p>💰 ₹${s.price}</p>
+    <p>⏱ ${s.duration} mins</p>
+    <button onclick="book(${s.id})">Book Now</button>
+</div>`;
+    });
+
+    document.getElementById("services").innerHTML = html;
+});
+
+function book(serviceId){
+    window.location = `booking.html?service=${serviceId}&garage=${garageId}`;
+}
+
+function logout(){
+    localStorage.removeItem("user");
+    window.location.href = "login.html";
+};
+</script>

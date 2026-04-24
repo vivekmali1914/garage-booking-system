@@ -1,0 +1,204 @@
+
+<link rel="stylesheet" href="style.css">
+
+<div class="navbar">
+    <h2>Garage Booking System</h2>
+    <button onclick="logout()">Logout</button>
+</div>
+
+ <!-- HEADER -->
+    <div class="header">
+    <h1>Garage Dashboard</h1>
+
+    <button onclick="window.location='add-service.html'" class="add-btn">
+        + Add Service
+    </button>
+    </div>
+    
+<div class="menu-bar">
+
+    <div class="menu-card" onclick="scrollToSection('emergency')">
+        🚨 Emergency
+    </div>
+
+    <div class="menu-card" onclick="scrollToSection('pending')">
+        ⏳ Pending
+    </div>
+
+    <div class="menu-card" onclick="scrollToSection('inprogress')">
+        🟡 In Progress
+    </div>
+
+    <div class="menu-card" onclick="scrollToSection('completed')">
+        ✅ Completed
+    </div>
+
+</div>
+
+<div class="main">
+
+   
+
+    <!-- 🚨 EMERGENCY -->
+    <div class="section" id="emergency">
+    <h2>🚨 Emergency Requests</h2>
+    <div class="grid" id="emergency-data"></div>
+  </div>
+
+<div class="section" id="pending">
+    <h2>⏳ Pending Requests</h2>
+    <div class="grid" id="pending-data"></div>
+</div>
+
+<div class="section" id="inprogress">
+    <h2>🟡 In Progress Requests</h2>
+    <div class="grid" id="inprogress-data"></div>
+</div>
+
+<div class="section" id="completed">
+    <h2>✅ Completed Requests</h2>
+    <div class="grid" id="completed-data"></div>
+</div>
+
+</div>
+
+
+<script>
+// get logged-in user
+
+let user = JSON.parse(localStorage.getItem("user"));
+
+if(!user){
+    window.location = "login.html";
+}
+
+if(user.role !== "garage_owner"){
+    alert("Access Denied ❌");
+    window.location = "index.html";
+}
+
+let garageId = user.garage_id;
+
+fetch(`http://localhost:3000/garage/${garageId}/appointments`)
+.then(res => res.json())
+.then(data => {
+
+    let pendingHTML = "";
+    let inProgressHTML = "";
+    let completedHTML = "";
+
+    data.forEach(a => {
+
+        let card = `
+        <div class="card">
+            <h3>👤 ${a.customer_name}</h3>
+            <p>🔧 ${a.service_name}</p>
+            <p>📅 ${a.date}</p>
+            <p>⏰ ${a.time}</p>
+            <p>Status: <b>${a.status}</b></p>
+            <p>Type: ${a.service_type}</p>
+
+            ${a.service_type === "home" ? `<p>📍 ${a.address}</p>` : ""}
+
+            <div class="btn-group">
+                ${a.status !== "In Progress" && a.status !== "Completed" 
+                    ? `<button onclick="updateStatus(${a.id}, 'In Progress')">Start</button>` 
+                    : ""}
+
+                ${a.status !== "Completed" 
+                    ? `<button onclick="updateStatus(${a.id}, 'Completed')">Complete</button>` 
+                    : ""}
+            </div>
+        </div>
+        `;
+
+        if(a.status === "Completed"){
+            completedHTML += card;
+        } 
+        else if(a.status === "In Progress"){
+            inProgressHTML += card;
+        } 
+        else {
+            pendingHTML += card;
+        }
+    });
+
+   document.getElementById("pending-data").innerHTML = pendingHTML;
+   document.getElementById("inprogress-data").innerHTML = inProgressHTML;
+   document.getElementById("completed-data").innerHTML = completedHTML;
+});
+
+
+
+function updateStatus(id, status){
+    fetch(`http://localhost:3000/update-status/${id}`, {
+        method: "PUT",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ status })
+    })
+    .then(res => res.text())
+    .then(msg => {
+        alert(msg);
+        location.reload();
+    });
+}
+
+function logout(){
+    localStorage.removeItem("user");
+    window.location.href = "login.html";
+};
+
+fetch(`http://localhost:3000/emergency-requests/${garageId}`)
+.then(res => res.json())
+.then(data => {
+
+    let html = "";
+
+    data.forEach(r => {
+        html += `
+        <div class="card">
+            <p>Problem: ${r.problem}</p>
+            <p>Location: ${r.latitude}, ${r.longitude}</p>
+
+            <button onclick="acceptRequest(${r.id})">
+                Accept Job
+            </button>
+
+        </div>
+        `;
+    });
+
+    document.getElementById("emergency-data").innerHTML = html;
+});
+
+
+function acceptRequest(id){
+
+    console.log("Accept clicked:", id);
+
+    let user = JSON.parse(localStorage.getItem("user"));
+
+    fetch(`http://localhost:3000/accept-emergency/${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            garage_id: user.garage_id
+        })
+    })
+    .then(res => res.text())
+    .then(msg => {
+        alert(msg);
+        location.reload();
+    })
+    .catch(err => console.log(err));
+}
+
+function scrollToSection(id){
+    document.getElementById(id).scrollIntoView({
+        behavior: "smooth"
+    });
+}
+
+</script>

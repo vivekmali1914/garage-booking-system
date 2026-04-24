@@ -1,0 +1,52 @@
+<link rel="stylesheet" href="style.css">
+
+<div class="navbar">
+    <h2>Garage Booking System</h2>
+    <button onclick="logout()">Logout</button>
+</div>
+
+<h1>Add Service</h1>
+
+<div class="form-container">
+    <input type="text" id="name" placeholder="Service Name"><br><br>
+    <input type="number" id="duration" placeholder="Duration (minutes)"><br><br>
+    <input type="number" id="price" placeholder="Price"><br><br>
+
+    <button onclick="addService()">Add Service</button>
+</div>
+
+<script>
+let user = JSON.parse(localStorage.getItem("user"));
+
+if(!user){
+    window.location = "login.html";
+}
+
+function addService(){
+    let name = document.getElementById("name").value;
+    let duration = document.getElementById("duration").value;
+    let price = document.getElementById("price").value;
+
+    fetch("http://localhost:3000/add-service", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            name,
+            duration,
+            price,
+            garage_id: user.garage_id
+        })
+    })
+    .then(res => res.text())
+    .then(data => {
+        alert(data);
+    });
+}
+
+function logout(){
+    localStorage.removeItem("user");
+    window.location.href = "login.html";
+};
+</script>
