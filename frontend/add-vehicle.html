@@ -26,12 +26,12 @@ function addVehicle(){
     let model = document.getElementById("model").value.trim();
     let number_plate = document.getElementById("plate").value.trim().toUpperCase();
 
-     if(!model || !number_plate){
+    if(!model || !number_plate){
         alert("All fields are required ❌");
         return;
     }
 
-     fetch(`https://garage-booking-system-1.onrender.com/vehicles/${user.id}`)
+    fetch(`https://garage-booking-system-1.onrender.com/vehicles/${user.id}`)
     .then(res => res.json())
     .then(vehicles => {
 
@@ -44,29 +44,32 @@ function addVehicle(){
             return;
         }
 
-    }
-    
-
-    fetch("https://garage-booking-system-1.onrender.com/add-vehicle", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            user_id: user.id,
-            model,
-            number_plate
+        // ✅ MOVE POST REQUEST HERE
+        fetch("https://garage-booking-system-1.onrender.com/add-vehicle", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                user_id: user.id,
+                model,
+                number_plate
+            })
         })
-    })
-    .then(res => res.text())
-    .then(data => {
-        alert(data);
+        .then(res => res.text())
+        .then(data => {
+            alert(data);
+            window.location.href = "index.html";
+        });
 
-        // redirect back to booking
-        window.location.href = "index.html";
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Something went wrong ❌");
     });
 }
 
+    
 function logout(){
     localStorage.removeItem("user");
     window.location = "login.html";
