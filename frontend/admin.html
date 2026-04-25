@@ -104,7 +104,7 @@ if(user.role !== "garage_owner"){
 
 let garageId = user.garage_id;
 
-fetch(`http://localhost:3000/garage/${garageId}/appointments`)
+fetch(`https://garage-booking-system-1.onrender.com/garage/${garageId}/appointments`)
 .then(res => res.json())
 .then(data => {
 
@@ -156,7 +156,7 @@ fetch(`http://localhost:3000/garage/${garageId}/appointments`)
 
 
 function updateStatus(id, status){
-    fetch(`http://localhost:3000/update-status/${id}`, {
+    fetch(`https://garage-booking-system-1.onrender.com/update-status/${id}`, {
         method: "PUT",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({ status })
