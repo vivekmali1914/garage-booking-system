@@ -11,7 +11,7 @@
 <script>
 let garageId = new URLSearchParams(window.location.search).get("garage");
 
-fetch(`https://garage-booking-system-1.onrender.com/${garageId}`)
+fetch(`https://garage-booking-system-1.onrender.com/services${garageId}`)
 .then(res => res.json())
 .then(data => {
     let html = "";
