@@ -27,7 +27,7 @@ function addService(){
     let duration = document.getElementById("duration").value;
     let price = document.getElementById("price").value;
 
-    fetch("http://localhost:3000/add-service", {
+    fetch("https://garage-booking-system-1.onrender.com/add-service", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
