@@ -35,7 +35,7 @@ function addGarage(){
     let opening_time = document.getElementById("open").value;
     let closing_time = document.getElementById("close").value;
 
-    fetch("http://localhost:3000/add-garage", {
+    fetch("https://garage-booking-system-1.onrender.com/add-garage", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
