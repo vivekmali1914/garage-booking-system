@@ -46,7 +46,7 @@ let garage_id = params.get("garage");
 
 
 // ✅ Load vehicles of logged-in user
-fetch(`http://localhost:3000/vehicles/${user.id}`)
+fetch(`https://garage-booking-system-1.onrender.com/vehicles/${user.id}`)
 .then(res => res.json())
 .then(data => {
     let html = "";
