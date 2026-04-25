@@ -1,3 +1,19 @@
+<link rel="stylesheet" href="style.css">
+
+<div class="navbar">
+    <h2>Garage Booking System</h2>
+    <button onclick="logout()">Logout</button>
+</div>
+
+<h1>Add Vehicle</h1>
+
+<div class="form-container">
+    <input type="text" id="model" placeholder="Vehicle Model"><br><br>
+    <input type="text" id="plate" placeholder="Number Plate"><br><br>
+
+    <button onclick="addVehicle()">Add Vehicle</button>
+</div>
+
 <script>
 let user = JSON.parse(localStorage.getItem("user"));
 
@@ -6,53 +22,48 @@ if(!user){
 }
 
 function addVehicle(){
+
     let model = document.getElementById("model").value.trim();
     let number_plate = document.getElementById("plate").value.trim().toUpperCase();
 
-    if(!model || !number_plate){
+     if(!model || !number_plate){
         alert("All fields are required ❌");
         return;
     }
 
-    // 1. First, check if the vehicle already exists
-    fetch(`https://garage-booking-system-1.onrender.com/vehicles/${user.id}`)
+     fetch(`https://garage-booking-system-1.onrender.com/vehicles/${user.id}`)
     .then(res => res.json())
     .then(vehicles => {
+
         let alreadyExists = vehicles.some(v => 
             v.number_plate.toUpperCase() === number_plate
         );
 
         if(alreadyExists){
             alert("Vehicle already available ❌");
-            return; // Stop here
+            return;
         }
 
-        // 2. If it doesn't exist, proceed with the POST request
-        // This MUST be inside this .then block
-        return fetch("https://garage-booking-system-1.onrender.com/add-vehicle", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                user_id: user.id,
-                model,
-                number_plate
-            })
-        });
+    }
+    
+
+    fetch("https://garage-booking-system-1.onrender.com/add-vehicle", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            user_id: user.id,
+            model,
+            number_plate
+        })
     })
-    .then(res => {
-        if(res) return res.text();
-    })
+    .then(res => res.text())
     .then(data => {
-        if(data) {
-            alert(data);
-            window.location.href = "index.html";
-        }
-    })
-    .catch(err => {
-        console.error("Error:", err);
-        alert("Server error. Please try again later.");
+        alert(data);
+
+        // redirect back to booking
+        window.location.href = "index.html";
     });
 }
 
@@ -60,4 +71,6 @@ function logout(){
     localStorage.removeItem("user");
     window.location = "login.html";
 }
+
+
 </script>
