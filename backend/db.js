@@ -1,24 +1,25 @@
-const mysql = require("mysql2");
-require('dotenv').config(); // Ensure you have dotenv installed to read variables locally
+const mysql = require('mysql2');
+require('dotenv').config();
 
-const db = mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME,
-    port: process.env.DB_PORT || 3306,
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
+const db = mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT || 4000,
+  // ADD THIS SECTION BELOW
+  ssl: {
+    minVersion: 'TLSv1.2',
+    rejectUnauthorized: false
+  }
 });
 
-db.getConnection((err, connection) => {
-    if (err) {
-        console.error("Database Error ❌", err.message);
-    } else {
-        console.log("Database Connected ✅");
-        connection.release();
-    }
+db.connect((err) => {
+  if (err) {
+    console.error('Database Error ❌', err.message);
+    return;
+  }
+  console.log('Connected to TiDB Database! ✅');
 });
 
 module.exports = db;
