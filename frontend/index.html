@@ -79,7 +79,7 @@ function toggleDropdown(e){
 }
 
 
-fetch("http://localhost:3000/garages")
+fetch("https://garage-booking-system-1.onrender.com/garages")
 .then(res => res.json())
 .then(data => {
     let html = "";
@@ -160,7 +160,7 @@ function sendEmergency(userId, problem, lat, lng){
         return;
     }
 
-    fetch("http://localhost:3000/emergency", {
+    fetch("https://garage-booking-system-1.onrender.com/emergency", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
@@ -194,7 +194,7 @@ function goTo(page){
 }
 
 
-fetch(`http://localhost:3000/vehicles/${user.id}`)
+fetch(`https://garage-booking-system-1.onrender.com/vehicles/${user.id}`)
 .then(res => res.json())
 .then(data => {
 
@@ -221,7 +221,7 @@ function loadEmergencyStatus(){
 
     if(!user) return;
 
-    fetch(`http://localhost:3000/my-emergency/${user.id}`)
+    fetch(`https://garage-booking-system-1.onrender.com/my-emergency/${user.id}`)
     .then(res => res.json())
     .then(data => {
 
