@@ -76,9 +76,16 @@ fetch("https://garage-booking-system-1.onrender.com/garages")
 });
     
 
-if(!user){
+/* if(!user){
     document.querySelector(".nav-buttons").innerHTML = `
         <button onclick="window.location='login.html'">Login</button>
+    `;
+} */
+    if(!user){
+    document.getElementById("garages").innerHTML = `
+        <h3 style="text-align:center; margin-top:20px;">
+            Please login to view garages 🔒
+        </h3>
     `;
 }
 
