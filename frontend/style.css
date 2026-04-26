@@ -638,29 +638,20 @@ html {
     background: #f1f5f9;
 }
 
-.input-box {
+.password-box {
     position: relative;
-    width: 320px;
-    margin: 10px auto;
-}
-
-.input-box input {
     width: 100%;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-    box-sizing: border-box;
 }
 
-/* only password gets extra space */
 .password-box input {
+    width: 100%;
+    padding: 10px;
     padding-right: 40px;
 }
 
 .password-box span {
     position: absolute;
-    right: 12px;
+    right: 10px;
     top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
