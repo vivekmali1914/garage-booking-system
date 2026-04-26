@@ -1,7 +1,6 @@
 <link rel="stylesheet" href="style1.css">
 
 <div class="navbar">
-    <button onclick="goBack()" style="margin:10px;">⬅ Back</button>
     <h2>Garage Booking System</h2>
 
     <div class="nav-right">
@@ -259,11 +258,4 @@ function loadEmergencyStatus(){
     });
 }
     
-function goBack(){
-    if(document.referrer){
-        window.history.back();
-    } else {
-        window.location.href = "index.html"; // fallback
-    }
-}
 </script>
