@@ -29,7 +29,19 @@ fetch(`https://garage-booking-system-1.onrender.com/services/${garageId}`)
     document.getElementById("services").innerHTML = html;
 });
 
+/*function book(serviceId){
+    window.location = `booking.html?service=${serviceId}&garage=${garageId}`;
+} */
+
 function book(serviceId){
+    let user = JSON.parse(localStorage.getItem("user"));
+
+    if(!user){
+        alert("Please login to book service ❌");
+        window.location = "login.html";
+        return;
+    }
+
     window.location = `booking.html?service=${serviceId}&garage=${garageId}`;
 }
 
