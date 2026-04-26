@@ -1,6 +1,8 @@
 <link rel="stylesheet" href="style.css">
 
 <div class="navbar">
+    <button onclick="goBack()" style="margin:10px;">⬅ Back</button>
+    
     <h2>My Bookings</h2>
     <button onclick="logout()">Logout</button>
 </div>
@@ -49,5 +51,13 @@ fetch(`https://garage-booking-system-1.onrender.com/my-bookings/${user.id}`)
 function logout(){
     localStorage.removeItem("user");
     window.location = "login.html";
+}
+
+function goBack(){
+    if(document.referrer){
+        window.history.back();
+    } else {
+        window.location.href = "index.html"; // fallback
+    }
 }
 </script>
