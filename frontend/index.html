@@ -258,4 +258,12 @@ function loadEmergencyStatus(){
         document.getElementById("emergencyStatus").innerHTML = html;
     });
 }
+    
+function goBack(){
+    if(document.referrer){
+        window.history.back();
+    } else {
+        window.location.href = "index.html"; // fallback
+    }
+}
 </script>
