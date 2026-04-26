@@ -1,6 +1,7 @@
 <link rel="stylesheet" href="style.css">
 
 <div class="navbar">
+    <button onclick="goBack()" style="margin:10px;">⬅ Back</button>
     <h2>Garage Booking System</h2>
     <button onclick="logout()">Logout</button>
 </div>
@@ -48,5 +49,14 @@ function book(serviceId){
 function logout(){
     localStorage.removeItem("user");
     window.location.href = "login.html";
-};    
+}; 
+
+function goBack(){
+    if(document.referrer){
+        window.history.back();
+    } else {
+        window.location.href = "index.html";
+    }
+}
+    
 </script>
