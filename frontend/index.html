@@ -57,7 +57,24 @@
 
 let user = JSON.parse(localStorage.getItem("user"));
 
+fetch("https://garage-booking-system-1.onrender.com/garages")
+.then(res => res.json())
+.then(data => {
+    let html = "";
 
+    data.forEach(g => {
+       html += `
+<div class="card">
+    <h3>${g.name}</h3>
+    <p>📍 ${g.location}</p>
+    <p>🚗 Capacity: ${g.capacity}</p>
+    <button onclick="viewServices(${g.id})">View Services</button>
+</div>`;
+    });
+
+    document.getElementById("garages").innerHTML = html;
+});
+    
 
 if(!user){
     document.querySelector(".nav-buttons").innerHTML = `
@@ -79,23 +96,6 @@ function toggleDropdown(e){
 }
 
 
-fetch("https://garage-booking-system-1.onrender.com/garages")
-.then(res => res.json())
-.then(data => {
-    let html = "";
-
-    data.forEach(g => {
-       html += `
-<div class="card">
-    <h3>${g.name}</h3>
-    <p>📍 ${g.location}</p>
-    <p>🚗 Capacity: ${g.capacity}</p>
-    <button onclick="viewServices(${g.id})">View Services</button>
-</div>`;
-    });
-
-    document.getElementById("garages").innerHTML = html;
-});
 
 function viewServices(id){
      let user = JSON.parse(localStorage.getItem("user"));
