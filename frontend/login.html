@@ -8,7 +8,12 @@
     <h1>Login</h1>
 
     <input type="email" id="email" placeholder="Email"><br><br>
-    <input type="password" id="password" placeholder="Password"><br><br>
+    
+    <div class="password-box">
+    <input type="password" id="password" placeholder="Password">
+    <span onclick="togglePassword()" id="toggleIcon">👁️</span>
+    </div>
+    <br>
 
     <button onclick="login()">Login</button>
 
@@ -60,5 +65,18 @@ function login(){
         console.log(err);
         alert("Login failed ❌");
     });
+}
+
+function togglePassword() {
+    let password = document.getElementById("password");
+    let icon = document.getElementById("toggleIcon");
+
+    if (password.type === "password") {
+        password.type = "text";
+        icon.textContent = "🙈";
+    } else {
+        password.type = "password";
+        icon.textContent = "👁️";
+    }
 }
 </script>
