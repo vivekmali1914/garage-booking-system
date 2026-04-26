@@ -638,39 +638,30 @@ html {
     background: #f1f5f9;
 }
 
-/* 1. Set the standard container for all inputs */
-.input-group, .password-box {
+.input-box {
     position: relative;
-    width: 320px; /* Fixed width for both */
-    margin: 10px auto; /* Centering */
+    width: 320px;
+    margin: 10px auto;
 }
 
-/* 2. Make all inputs inside those containers fill the width */
-.input-group input, 
-.password-box input {
-    width: 100%; 
+.input-box input {
+    width: 100%;
     padding: 12px;
-    padding-right: 40px; /* Space for the eye icon */
     border-radius: 8px;
     border: 1px solid #ccc;
     font-size: 14px;
-    box-sizing: border-box; /* CRITICAL: ensures padding doesn't add to width */
+    box-sizing: border-box;
 }
 
-/* 3. Style the eye icon */
+/* only password gets extra space */
+.password-box input {
+    padding-right: 40px;
+}
+
 .password-box span {
     position: absolute;
     right: 12px;
     top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
-    font-size: 18px;
-    z-index: 10;
-}
-
-/* 4. Fix the button width to match */
-.form-container button {
-    width: 320px;
-    margin: 10px auto;
-    display: block;
 }
