@@ -56,7 +56,11 @@
 
 
 let user = JSON.parse(localStorage.getItem("user"));
-
+    
+if(!user){
+    document.querySelector(".profile-container").style.display = "none";
+}
+    
 fetch("https://garage-booking-system-1.onrender.com/garages")
 .then(res => res.json())
 .then(data => {
