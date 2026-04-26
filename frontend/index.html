@@ -193,7 +193,7 @@ function goTo(page){
     window.location.href = page;
 }
 
-
+if(user){
 fetch(`https://garage-booking-system-1.onrender.com/vehicles/${user.id}`)
 .then(res => res.json())
 .then(data => {
@@ -214,6 +214,7 @@ fetch(`https://garage-booking-system-1.onrender.com/vehicles/${user.id}`)
 
     document.getElementById("vehicle").innerHTML = html;
 });
+}
 
 function loadEmergencyStatus(){
 
