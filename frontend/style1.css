@@ -24,7 +24,18 @@ h1 {
     position: relative ;
 }
 
+.nav-right {
+    position: absolute;
+    right: 40px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
 .navbar h2 {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     margin: 0;
     font-size: 22px;
 }
@@ -191,12 +202,6 @@ button:hover {
     background: #dc2626;
 }
 
-
-.nav-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
 
 .profile-container {
     position: relative;
