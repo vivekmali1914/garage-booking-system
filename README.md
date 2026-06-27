@@ -1,6 +1,6 @@
 # 🚗 Garage Booking System
 
-A full-stack web application that allows users to book vehicle services and request emergency roadside assistance.
+A full-stack web application that allows users to book vehicle services and request emergency roadside assistance.We can book garage and take appoinment in our time . Also take home service from the application as well as at emergency time we can send requests to nearest garages .
 
 ## 👥 Users
 - Customer
