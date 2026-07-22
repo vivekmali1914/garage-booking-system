@@ -203,7 +203,7 @@ function acceptRequest(id){
 
     let user = JSON.parse(localStorage.getItem("user"));
 
-    fetch(`http://localhost:3000/accept-emergency/${id}`, {
+    fetch(`https://garage-booking-system-1.onrender.com/accept-emergency/${id}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"
